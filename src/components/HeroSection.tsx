@@ -1,5 +1,5 @@
 
-import { Smartphone, Map, whatsapp } from "lucide-react";
+import { Smartphone, Map } from "lucide-react";
 
 const HeroSection = () => (
   <section className="relative bg-white overflow-hidden pt-8 sm:pt-16 pb-8 sm:pb-20 rounded-xl shadow-lg mb-8">
@@ -9,7 +9,8 @@ const HeroSection = () => (
       <Map size={180} className="text-green-100 translate-y-8 translate-x-10 hidden md:block" />
     </div>
     <div className="relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto px-4">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
+      <p className="text-green-600 font-medium mb-2">Welcome to Black Bean</p>
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight font-playfair">
         Genuine App Reviews – iOS, Android & Google Maps
       </h1>
       <p className="text-lg sm:text-xl text-gray-600 mb-7 font-medium">
@@ -22,7 +23,6 @@ const HeroSection = () => (
         className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-green-600 text-white hover:bg-green-700 transition font-semibold text-lg shadow-lg"
       >
         <span role="img" aria-label="envelope">📩</span> Place Order on WhatsApp
-        <whatsapp size={22} className="ml-1" />
       </a>
     </div>
   </section>

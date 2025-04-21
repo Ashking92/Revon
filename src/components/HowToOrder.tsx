@@ -1,5 +1,5 @@
 
-import { whatsapp } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 const steps = [
   "Click the WhatsApp button below",
@@ -25,7 +25,7 @@ const HowToOrder = () => (
         className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-green-600 text-white hover:bg-green-700 transition font-semibold text-lg shadow-lg"
       >
         <span role="img" aria-label="envelope">📩</span> Place Order on WhatsApp
-        <whatsapp size={22} className="ml-1" />
+        <MessageSquare size={22} className="ml-1" />
       </a>
     </div>
   </section>
