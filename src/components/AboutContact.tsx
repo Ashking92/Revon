@@ -5,7 +5,7 @@ const AboutContact = () => (
   <section className="max-w-2xl mx-auto mb-10 px-4">
     <h2 className="text-xl font-bold text-center text-gray-900 mb-4">About Us</h2>
     <p className="text-gray-700 text-center mb-6">
-      <span className="font-semibold text-green-700">Black Bean</span>, founded by Yash Pawar (Boisar, Maharashtra), provides reliable, fast, and genuine app review services to developers and businesses.
+      <span className="font-semibold text-green-700">RevON</span>, founded by Yash Pawar (Boisar, Maharashtra), provides reliable, fast, and genuine app review services to developers and businesses.
     </p>
     <h2 className="text-lg font-bold text-gray-900 mb-2 text-center">Contact</h2>
     <div className="flex flex-col items-center gap-3 text-gray-700">
@@ -36,3 +36,4 @@ const AboutContact = () => (
 );
 
 export default AboutContact;
+

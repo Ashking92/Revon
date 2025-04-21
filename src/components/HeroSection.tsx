@@ -9,7 +9,7 @@ const HeroSection = () => (
       <Map size={180} className="text-green-100 translate-y-8 translate-x-10 hidden md:block" />
     </div>
     <div className="relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto px-4">
-      <p className="text-green-600 font-medium mb-2">Welcome to Black Bean</p>
+      <p className="text-green-600 font-medium mb-2">Welcome to RevON</p>
       <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight font-playfair">
         Genuine App Reviews – iOS, Android & Google Maps
       </h1>
@@ -29,3 +29,4 @@ const HeroSection = () => (
 );
 
 export default HeroSection;
+

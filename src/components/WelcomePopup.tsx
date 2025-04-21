@@ -23,11 +23,11 @@ const WelcomePopup = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl text-green-700">Welcome to Black Bean!</DialogTitle>
+          <DialogTitle className="text-xl text-green-700">Welcome to RevON!</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <p className="text-gray-700">
-            Thank you for visiting Black Bean - your trusted app review service!
+            Thank you for visiting RevON - your trusted app review service!
           </p>
           <div className="bg-green-50 p-3 rounded-md">
             <p className="font-medium text-green-800">
@@ -54,3 +54,4 @@ const WelcomePopup = () => {
 };
 
 export default WelcomePopup;
+
