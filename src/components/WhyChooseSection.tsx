@@ -14,7 +14,7 @@ const features = [
 
 const WhyChooseSection = () => (
   <section className="max-w-3xl mx-auto mb-10 px-4">
-    <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">Why Choose <span className="text-green-700">Black Bean</span>?</h2>
+    <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">Why Choose <span className="text-green-700">Rev ON</span>?</h2>
     <ul className="grid gap-3 sm:grid-cols-2">
       {features.map((item) => (
         <li key={item} className="flex items-start gap-2">
