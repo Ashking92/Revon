@@ -5,7 +5,7 @@ import InfoCards from "../components/InfoCards";
 import PriceTable from "../components/PriceTable";
 import BulkPacksTable from "../components/BulkPacksTable";
 import Statistics from "../components/Statistics";
-import Testimonials from "../components/Testimonials";
+// import Testimonials from "../components/Testimonials";  // Removed import
 import HowToOrder from "../components/HowToOrder";
 import AboutContact from "../components/AboutContact";
 import Footer from "../components/Footer";
@@ -31,8 +31,7 @@ const Index = () => {
       <PriceTable />
       <BulkPacksTable />
       
-      {/* Testimonials Section */}
-      <Testimonials />
+      {/* Removed Testimonials Section */}
       
       {/* How to Order Section */}
       <HowToOrder />
@@ -47,3 +46,4 @@ const Index = () => {
 };
 
 export default Index;
+
