@@ -1,5 +1,5 @@
 
-import { Smartphone, Map, Whatsapp } from "lucide-react";
+import { Smartphone, Map, WhatsApp } from "lucide-react";
 
 const HeroSection = () => (
   <section className="relative bg-white overflow-hidden pt-8 sm:pt-16 pb-8 sm:pb-20 rounded-xl shadow-lg mb-8">
@@ -22,7 +22,7 @@ const HeroSection = () => (
         className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-green-600 text-white hover:bg-green-700 transition font-semibold text-lg shadow-lg"
       >
         <span role="img" aria-label="envelope">📩</span> Place Order on WhatsApp
-        <Whatsapp size={22} className="ml-1" />
+        <WhatsApp size={22} className="ml-1" />
       </a>
     </div>
   </section>
