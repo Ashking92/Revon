@@ -1,10 +1,13 @@
 
 import ReviewOrderForm from "../components/ReviewOrderForm";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const IOSReviews = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-white p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
+      <Navbar />
+      <div className="max-w-4xl mx-auto p-4">
         <h1 className="text-3xl font-bold text-center mb-8">
           Buy <span className="text-blue-600">iOS App Store</span> Reviews
         </h1>
@@ -22,6 +25,7 @@ const IOSReviews = () => {
 
         <ReviewOrderForm defaultPlatform="ios" />
       </div>
+      <Footer />
     </div>
   );
 };

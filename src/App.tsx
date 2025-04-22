@@ -10,6 +10,11 @@ import IOSReviews from "./pages/IOSReviews";
 import AndroidReviews from "./pages/AndroidReviews";
 import GoogleMapsReviews from "./pages/GoogleMapsReviews";
 import WebDevelopment from "./pages/WebDevelopment";
+import AppDevelopment from "./pages/AppDevelopment";
+import WordPressDevelopment from "./pages/WordPressDevelopment";
+import WebCertificate from "./pages/WebCertificate";
+import Contact from "./pages/Contact";
+import LiveOrders from "./pages/LiveOrders";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +30,11 @@ const App = () => (
           <Route path="/android-reviews" element={<AndroidReviews />} />
           <Route path="/google-maps-reviews" element={<GoogleMapsReviews />} />
           <Route path="/web-development" element={<WebDevelopment />} />
+          <Route path="/app-development" element={<AppDevelopment />} />
+          <Route path="/wordpress-development" element={<WordPressDevelopment />} />
+          <Route path="/web-certificate" element={<WebCertificate />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/live-orders" element={<LiveOrders />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

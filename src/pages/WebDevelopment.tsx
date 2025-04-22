@@ -1,11 +1,14 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const WebDevelopment = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-white p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
+      <Navbar />
+      <div className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-center mb-8">
           Professional <span className="text-blue-600">Web Development</span> Services
         </h1>
@@ -30,7 +33,7 @@ const WebDevelopment = () => {
                 <tr>
                   <th className="py-2 px-3 text-left">Service</th>
                   <th className="py-2 px-3 text-center">Market Rate</th>
-                  <th className="py-2 px-3 text-center">Our Price</th>
+                  <th className="py-2 px-3 text-center">Our Price (50% OFF)</th>
                   <th className="py-2 px-3 text-center">Savings</th>
                 </tr>
               </thead>
@@ -38,32 +41,32 @@ const WebDevelopment = () => {
                 <tr>
                   <td className="py-2 px-3 font-medium">Basic Website (5 pages)</td>
                   <td className="py-2 px-3 text-center">₹15,000 - ₹25,000</td>
-                  <td className="py-2 px-3 text-center font-semibold text-blue-700">₹12,000</td>
-                  <td className="py-2 px-3 text-center text-green-600">~30%</td>
+                  <td className="py-2 px-3 text-center font-semibold text-blue-700">₹6,000</td>
+                  <td className="py-2 px-3 text-center text-green-600">~50%</td>
                 </tr>
                 <tr className="bg-blue-50">
                   <td className="py-2 px-3 font-medium">WordPress Development</td>
                   <td className="py-2 px-3 text-center">₹20,000 - ₹35,000</td>
-                  <td className="py-2 px-3 text-center font-semibold text-blue-700">₹15,000</td>
-                  <td className="py-2 px-3 text-center text-green-600">~40%</td>
+                  <td className="py-2 px-3 text-center font-semibold text-blue-700">₹7,500</td>
+                  <td className="py-2 px-3 text-center text-green-600">~50%</td>
                 </tr>
                 <tr>
                   <td className="py-2 px-3 font-medium">E-commerce Website</td>
                   <td className="py-2 px-3 text-center">₹35,000 - ₹60,000</td>
-                  <td className="py-2 px-3 text-center font-semibold text-blue-700">₹25,000</td>
-                  <td className="py-2 px-3 text-center text-green-600">~45%</td>
+                  <td className="py-2 px-3 text-center font-semibold text-blue-700">₹12,500</td>
+                  <td className="py-2 px-3 text-center text-green-600">~50%</td>
                 </tr>
                 <tr className="bg-blue-50">
                   <td className="py-2 px-3 font-medium">Mobile App Development</td>
                   <td className="py-2 px-3 text-center">₹60,000 - ₹150,000</td>
-                  <td className="py-2 px-3 text-center font-semibold text-blue-700">₹45,000</td>
+                  <td className="py-2 px-3 text-center font-semibold text-blue-700">₹22,500</td>
                   <td className="py-2 px-3 text-center text-green-600">~50%</td>
                 </tr>
                 <tr>
                   <td className="py-2 px-3 font-medium">Web Development Certificate</td>
                   <td className="py-2 px-3 text-center">₹25,000 - ₹40,000</td>
-                  <td className="py-2 px-3 text-center font-semibold text-blue-700">₹20,000</td>
-                  <td className="py-2 px-3 text-center text-green-600">~35%</td>
+                  <td className="py-2 px-3 text-center font-semibold text-blue-700">₹10,000</td>
+                  <td className="py-2 px-3 text-center text-green-600">~50%</td>
                 </tr>
               </tbody>
             </table>
@@ -82,6 +85,7 @@ const WebDevelopment = () => {
           </div>
         </section>
       </div>
+      <Footer />
     </div>
   );
 };

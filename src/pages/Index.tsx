@@ -11,14 +11,17 @@ import HowToOrder from "../components/HowToOrder";
 import AboutContact from "../components/AboutContact";
 import Footer from "../components/Footer";
 import WelcomePopup from "../components/WelcomePopup";
+import Navbar from "../components/Navbar";
+import LiveOrders from "../components/LiveOrders";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-green-50 to-white">
       <WelcomePopup />
+      <Navbar />
+      
       <HeroSection />
       <Statistics />
-      <WhyChooseSection />
       
       <section className="max-w-6xl mx-auto my-12 px-4">
         <h2 className="text-3xl font-bold text-center mb-8">
@@ -55,18 +58,46 @@ const Index = () => {
             <p className="mb-6 text-gray-600 text-center">
               Professional development services at competitive rates
             </p>
-            <Link to="/web-development" className="block">
-              <Button className="w-full h-16 text-base bg-blue-600 hover:bg-blue-700">
-                View Web & App Development Services
-              </Button>
-            </Link>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Link to="/web-development" className="block">
+                <Button className="w-full h-16 text-base bg-blue-600 hover:bg-blue-700">
+                  Web Development
+                </Button>
+              </Link>
+              <Link to="/app-development" className="block">
+                <Button className="w-full h-16 text-base bg-purple-600 hover:bg-purple-700">
+                  App Development
+                </Button>
+              </Link>
+              <Link to="/wordpress-development" className="block">
+                <Button className="w-full h-16 text-base bg-orange-600 hover:bg-orange-700">
+                  WordPress
+                </Button>
+              </Link>
+              <Link to="/web-certificate" className="block">
+                <Button className="w-full h-16 text-base bg-teal-600 hover:bg-teal-700">
+                  Web Certificate
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
       
-      <InfoCards />
-      <PriceTable />
-      <BulkPacksTable />
+      <div className="max-w-6xl mx-auto px-4 mb-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-2">
+          <InfoCards />
+          <PriceTable />
+          <BulkPacksTable />
+        </div>
+        
+        <div>
+          <div className="sticky top-24">
+            <LiveOrders />
+          </div>
+        </div>
+      </div>
+      
       <HowToOrder />
       <AboutContact />
       <Footer />
