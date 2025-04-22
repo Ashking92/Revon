@@ -10,6 +10,7 @@ import HowToOrder from "../components/HowToOrder";
 import AboutContact from "../components/AboutContact";
 import Footer from "../components/Footer";
 import WelcomePopup from "../components/WelcomePopup";
+import ReviewOrderForm from "../components/ReviewOrderForm";
 
 const Index = () => {
   return (
@@ -23,6 +24,14 @@ const Index = () => {
       
       {/* Why Choose Us Section */}
       <WhyChooseSection />
+      
+      {/* Review Order Form */}
+      <section className="max-w-4xl mx-auto my-12 px-4">
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-900">
+          Order <span className="text-green-700">Reviews</span> Now
+        </h2>
+        <ReviewOrderForm />
+      </section>
       
       {/* Info Cards Section */}
       <InfoCards />
@@ -46,4 +55,3 @@ const Index = () => {
 };
 
 export default Index;
-
