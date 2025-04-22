@@ -41,7 +41,11 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const ReviewOrderForm = () => {
+interface ReviewOrderFormProps {
+  defaultPlatform?: "ios" | "android" | "google_maps";
+}
+
+const ReviewOrderForm: React.FC<ReviewOrderFormProps> = ({ defaultPlatform = "ios" }) => {
   const [unitPrice, setUnitPrice] = useState(50);
   const [total, setTotal] = useState(50);
   const [orderNumber, setOrderNumber] = useState("");
@@ -49,7 +53,7 @@ const ReviewOrderForm = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      platform: "ios",
+      platform: defaultPlatform,
       quantity: 1,
       appLink: "",
       email: "",
@@ -128,7 +132,11 @@ const ReviewOrderForm = () => {
   return (
     <Card className="w-full max-w-lg mx-auto">
       <CardHeader>
-        <CardTitle className="text-center text-xl text-gray-800">Order Reviews</CardTitle>
+        <CardTitle className="text-center text-xl text-gray-800">
+          Order {defaultPlatform === "ios" ? "iOS" : 
+                 defaultPlatform === "android" ? "Android" : 
+                 "Google Maps"} Reviews
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
