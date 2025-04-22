@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import IOSReviews from "./pages/IOSReviews";
 import AndroidReviews from "./pages/AndroidReviews";
 import GoogleMapsReviews from "./pages/GoogleMapsReviews";
+import WebDevelopment from "./pages/WebDevelopment";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +24,7 @@ const App = () => (
           <Route path="/ios-reviews" element={<IOSReviews />} />
           <Route path="/android-reviews" element={<AndroidReviews />} />
           <Route path="/google-maps-reviews" element={<GoogleMapsReviews />} />
+          <Route path="/web-development" element={<WebDevelopment />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
