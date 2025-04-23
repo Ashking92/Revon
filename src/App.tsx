@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -17,6 +16,7 @@ import WebCertificate from "./pages/WebCertificate";
 import Contact from "./pages/Contact";
 import LiveOrders from "./pages/LiveOrders";
 import ServicesPage from "./pages/ServicesPage";
+import Earn from "./pages/Earn";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +52,7 @@ const App = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/live-orders" element={<LiveOrders />} />
             <Route path="/services" element={<ServicesPage />} />
+            <Route path="/earn" element={<Earn />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
@@ -61,4 +62,3 @@ const App = () => {
 };
 
 export default App;
-

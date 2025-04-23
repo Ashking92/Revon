@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { 
   NavigationMenu,
@@ -63,6 +62,9 @@ const Navbar = () => {
                     <div className="ml-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                       5
                     </div>
+                  </Link>
+                  <Link to="/earn" className="px-4 py-2 rounded hover:bg-blue-50" onClick={() => setMobileMenuOpen(false)}>
+                    Earn
                   </Link>
                 </div>
               </div>
@@ -153,6 +155,14 @@ const Navbar = () => {
                 <Link to="/contact">
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     Contact
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              
+              <NavigationMenuItem>
+                <Link to="/earn">
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Earn
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
