@@ -109,30 +109,24 @@ const Contact = () => {
               <div className="space-y-3">
                 <p className="flex items-start">
                   <span className="font-medium w-24">Email:</span>
-                  <a href="mailto:contact@revon.com" className="text-blue-600 hover:underline">contact@revon.com</a>
+                  <a href="mailto:yash92pawar74@gmail.com" className="text-blue-600 hover:underline">yash92pawar74@gmail.com</a>
                 </p>
                 <p className="flex items-start">
                   <span className="font-medium w-24">Phone:</span>
-                  <a href="tel:+919999999999" className="text-blue-600 hover:underline">+91 9999 999 999</a>
+                  <a href="tel:+918856832624" className="text-blue-600 hover:underline">+91 88568 32624</a>
                 </p>
                 <p className="flex items-start">
                   <span className="font-medium w-24">WhatsApp:</span>
-                  <a href="https://wa.me/+919999999999" target="_blank" className="text-green-600 hover:underline">+91 9999 999 999</a>
+                  <a href="https://wa.me/917385066631" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">+91 73850 66631</a>
+                </p>
+                <p className="flex items-start">
+                  <span className="font-medium w-24">Instagram:</span>
+                  <a href="https://instagram.com/theitsash" target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:underline">@theitsash</a>
                 </p>
                 <p className="flex items-start">
                   <span className="font-medium w-24">Hours:</span>
                   <span>Mon-Sat: 10AM - 7PM IST</span>
                 </p>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Connect With Us</h2>
-              <div className="flex space-x-4">
-                <a href="#" className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700">FB</a>
-                <a href="#" className="bg-blue-400 text-white p-2 rounded-full hover:bg-blue-500">TW</a>
-                <a href="#" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-2 rounded-full hover:from-purple-600 hover:to-pink-600">IG</a>
-                <a href="#" className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700">YT</a>
               </div>
             </div>
           </div>
@@ -144,3 +138,4 @@ const Contact = () => {
 };
 
 export default Contact;
+
