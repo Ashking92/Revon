@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Card, 
@@ -31,7 +30,6 @@ import { Check, Send, Info } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
 import { Tooltip } from "./ui/tooltip";
 
-// Define minimum rates per platform
 const MIN_RATES = {
   ios: 25,    // Reduced from 50
   android: 15, // Reduced from 30
@@ -80,13 +78,11 @@ const ReviewOrderForm: React.FC<ReviewOrderFormProps> = ({ defaultPlatform = "io
 
   React.useEffect(() => {
     if (useCustomAmount && watchCustomAmount) {
-      // Ensure custom amount is not below minimum
       const minRate = MIN_RATES[watchPlatform];
       const finalPrice = Math.max(watchCustomAmount, minRate);
       setUnitPrice(finalPrice);
       setTotal(finalPrice * watchQuantity);
     } else {
-      // Calculate standard price based on platform and quantity
       let price = MIN_RATES[watchPlatform];
       
       if (watchQuantity >= 50) {
@@ -111,7 +107,6 @@ const ReviewOrderForm: React.FC<ReviewOrderFormProps> = ({ defaultPlatform = "io
     const newOrderNumber = generateOrderId();
     setOrderNumber(newOrderNumber);
 
-    // Create WhatsApp message
     let message = `🔥 *NEW REVIEW ORDER* 🔥\n\n`;
     message += `*Order ID:* ${newOrderNumber}\n`;
     message += `*Platform:* ${data.platform === "ios" ? "iOS" : data.platform === "android" ? "Android" : "Google Maps"}\n`;
@@ -134,11 +129,9 @@ const ReviewOrderForm: React.FC<ReviewOrderFormProps> = ({ defaultPlatform = "io
     message += `\n*Total Amount:* ₹${total}\n\n`;
     message += `Thank you for ordering with RevON!`;
 
-    // Encode the message for WhatsApp URL
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/917385066631?text=${encodedMessage}`;
     
-    // Open WhatsApp
     window.open(whatsappUrl, '_blank');
   };
 
@@ -212,8 +205,15 @@ const ReviewOrderForm: React.FC<ReviewOrderFormProps> = ({ defaultPlatform = "io
                 >
                   Set custom amount per review
                 </label>
-                <Tooltip content={`Minimum ₹${MIN_RATES[watchPlatform]} per review`}>
-                  <Info className="h-4 w-4 text-muted-foreground" />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {`Minimum ₹${MIN_RATES[watchPlatform]} per review`}
+                  </TooltipContent>
                 </Tooltip>
               </div>
 
@@ -376,4 +376,3 @@ const ReviewOrderForm: React.FC<ReviewOrderFormProps> = ({ defaultPlatform = "io
 };
 
 export default ReviewOrderForm;
-
