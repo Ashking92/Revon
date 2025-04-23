@@ -15,6 +15,7 @@ import WordPressDevelopment from "./pages/WordPressDevelopment";
 import WebCertificate from "./pages/WebCertificate";
 import Contact from "./pages/Contact";
 import LiveOrders from "./pages/LiveOrders";
+import ServicesPage from "./pages/ServicesPage";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/web-certificate" element={<WebCertificate />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/live-orders" element={<LiveOrders />} />
+          <Route path="/services" element={<ServicesPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

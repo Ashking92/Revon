@@ -2,73 +2,71 @@ import React, { useState } from 'react';
 import { 
   Card, 
   CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle 
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { 
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Textarea } from "@/components/ui/textarea";
+import { Info } from "lucide-react";
 import { z } from "zod";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Send, Info } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
-import { Tooltip } from "./ui/tooltip";
 
+const MIN_QUANTITY = 1;
+const MAX_QUANTITY = 1000;
 const MIN_RATES = {
-  ios: 25,    // Reduced from 50
-  android: 15, // Reduced from 30
-  google_maps: 30 // Reduced from 60
+  ios: 25,
+  android: 15,
+  "google-maps": 20,
 };
 
 const formSchema = z.object({
-  platform: z.enum(["ios", "android", "google_maps"]),
-  quantity: z.coerce.number().min(1).max(1000),
-  customAmount: z.coerce.number().min(1).optional(),
-  appLink: z.string().url("Please enter a valid URL"),
-  email: z.string().email("Please enter a valid email"),
-  region: z.string().optional(),
-  rating: z.enum(["4", "5"]).optional(),
-  customMessage: z.boolean().default(false),
+  platform: z.enum(["ios", "android", "google-maps"]),
+  quantity: z.number().min(MIN_QUANTITY).max(MAX_QUANTITY),
+  reviewText: z.string().min(10, {
+    message: "Review text must be at least 10 characters.",
+  }),
+  useCustomAmount: z.boolean().default(false),
+  customAmount: z.number().optional(),
+  appLink: z.string().url({ message: "Please enter a valid URL" }),
 });
 
-type FormValues = z.infer<typeof formSchema>;
-
-interface ReviewOrderFormProps {
-  defaultPlatform?: "ios" | "android" | "google_maps";
-}
-
-const ReviewOrderForm: React.FC<ReviewOrderFormProps> = ({ defaultPlatform = "ios" }) => {
+const ReviewOrderForm = ({ defaultPlatform = "ios" }) => {
   const [unitPrice, setUnitPrice] = useState(MIN_RATES[defaultPlatform]);
-  const [total, setTotal] = useState(MIN_RATES[defaultPlatform]);
-  const [orderNumber, setOrderNumber] = useState("");
+  const [total, setTotal] = useState(0);
   const [useCustomAmount, setUseCustomAmount] = useState(false);
 
-  const form = useForm<FormValues>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       platform: defaultPlatform,
       quantity: 1,
+      reviewText: "",
+      useCustomAmount: false,
       customAmount: MIN_RATES[defaultPlatform],
       appLink: "",
-      email: "",
-      rating: "5",
-      customMessage: false,
     },
   });
 
@@ -77,301 +75,191 @@ const ReviewOrderForm: React.FC<ReviewOrderFormProps> = ({ defaultPlatform = "io
   const watchCustomAmount = form.watch("customAmount");
 
   React.useEffect(() => {
+    let price = MIN_RATES[watchPlatform];
     if (useCustomAmount && watchCustomAmount) {
-      const minRate = MIN_RATES[watchPlatform];
-      const finalPrice = Math.max(watchCustomAmount, minRate);
-      setUnitPrice(finalPrice);
-      setTotal(finalPrice * watchQuantity);
-    } else {
-      let price = MIN_RATES[watchPlatform];
-      
-      if (watchQuantity >= 50) {
-        price = MIN_RATES[watchPlatform] * 0.7; // 30% discount
-      } else if (watchQuantity >= 10) {
-        price = MIN_RATES[watchPlatform] * 0.8; // 20% discount
-      }
-      
-      setUnitPrice(price);
-      setTotal(price * watchQuantity);
+      price = Math.max(MIN_RATES[watchPlatform], watchCustomAmount);
     }
-  }, [watchPlatform, watchQuantity, watchCustomAmount, useCustomAmount]);
-
-  function generateOrderId() {
-    const randomId = Math.floor(100000 + Math.random() * 900000);
-    const date = new Date();
-    const dateStr = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
-    return `REV-${dateStr}-${randomId}`;
-  }
-
-  const onSubmit = (data: FormValues) => {
-    const newOrderNumber = generateOrderId();
-    setOrderNumber(newOrderNumber);
-
-    let message = `🔥 *NEW REVIEW ORDER* 🔥\n\n`;
-    message += `*Order ID:* ${newOrderNumber}\n`;
-    message += `*Platform:* ${data.platform === "ios" ? "iOS" : data.platform === "android" ? "Android" : "Google Maps"}\n`;
-    message += `*Quantity:* ${data.quantity} reviews\n`;
-    message += `*App Link:* ${data.appLink}\n`;
-    message += `*Email:* ${data.email}\n`;
-    
-    if (data.region) {
-      message += `*Region:* ${data.region}\n`;
-    }
-    
-    if (data.rating) {
-      message += `*Rating:* ${data.rating} stars\n`;
-    }
-    
-    if (data.customMessage) {
-      message += `*Custom Messages:* Yes\n`;
-    }
-    
-    message += `\n*Total Amount:* ₹${total}\n\n`;
-    message += `Thank you for ordering with RevON!`;
-
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/917385066631?text=${encodedMessage}`;
-    
-    window.open(whatsappUrl, '_blank');
+    setUnitPrice(price);
+    setTotal(price * watchQuantity);
+  }, [useCustomAmount, watchCustomAmount, watchPlatform, watchQuantity, setUnitPrice, setTotal]);
+  
+  const handleSubmit = (data) => {
+    alert("submit");
+    console.log(data);
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
-      <CardHeader>
-        <CardTitle className="text-center text-xl text-gray-800">
-          Order {defaultPlatform === "ios" ? "iOS" : 
-                 defaultPlatform === "android" ? "Android" : 
-                 "Google Maps"} Reviews
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="platform"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Platform</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select platform" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="ios">iOS App Store</SelectItem>
-                        <SelectItem value="android">Android Play Store</SelectItem>
-                        <SelectItem value="google_maps">Google Maps</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="quantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Number of Reviews</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Enter quantity"
-                        min={1}
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  checked={useCustomAmount}
-                  onCheckedChange={(checked) => setUseCustomAmount(!!checked)}
-                  id="custom-amount"
-                />
-                <label 
-                  htmlFor="custom-amount"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Set custom amount per review
-                </label>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span>
-                      <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {`Minimum ₹${MIN_RATES[watchPlatform]} per review`}
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-
-              {useCustomAmount && (
+    <TooltipProvider>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+          <Card>
+            <CardContent className="grid gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="customAmount"
+                  name="platform"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Amount per Review (₹)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder={`Min: ₹${MIN_RATES[watchPlatform]}`}
-                          min={MIN_RATES[watchPlatform]}
-                          {...field}
-                        />
-                      </FormControl>
+                      <FormLabel>Platform</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a platform" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="ios">iOS App Store</SelectItem>
+                          <SelectItem value="android">Android Play Store</SelectItem>
+                          <SelectItem value="google-maps">Google Maps</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-              )}
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <FormField
+                  control={form.control}
+                  name="quantity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Quantity</FormLabel>
+                      <FormControl>
+                        <Input type="number" defaultValue={1} placeholder="1" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Enter the number of reviews you want to purchase.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="reviewText"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Review Text</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Write your review here"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Write the content of the review you want to post.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="appLink"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>App/Store Link</FormLabel>
+                    <FormLabel>App Link</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="https://..."
-                        {...field}
-                      />
+                      <Input placeholder="https://example.com" {...field} />
                     </FormControl>
+                    <FormDescription>
+                      Enter the link to your app or business.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Contact Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="your@email.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="region"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Preferred Region (Optional)</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g., US, India, Global"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="rating"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Desired Rating</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select rating" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="5">5 Stars ⭐⭐⭐⭐⭐</SelectItem>
-                        <SelectItem value="4">4 Stars ⭐⭐⭐⭐</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-            </div>
-            
-            <FormField
-              control={form.control}
-              name="customMessage"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 py-2">
-                  <FormControl>
-                    <Checkbox 
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>
-                      Include custom review messages
-                    </FormLabel>
-                  </div>
-                </FormItem>
-              )}
-            />
-            
-            <div className="bg-gray-50 p-3 rounded-lg space-y-2">
-              <div className="flex justify-between items-center">
-                <span>Unit Price:</span>
-                <span className="font-semibold">₹{unitPrice}</span>
-              </div>
-              {watchQuantity >= 10 && !useCustomAmount && (
-                <div className="text-sm text-green-600 flex justify-end">
-                  {watchQuantity >= 50 ? "30% bulk discount applied!" : "20% bulk discount applied!"}
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <FormField
+                    control={form.control}
+                    name="useCustomAmount"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked);
+                              setUseCustomAmount(checked);
+                            }}
+                          />
+                        </FormControl>
+                        <div className="flex flex-col space-y-1 leading-none">
+                          <FormLabel>Use Custom Amount</FormLabel>
+                          <FormDescription>
+                            Set a custom amount per review.
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
                 </div>
-              )}
-              <div className="flex justify-between items-center border-t pt-2">
-                <span className="font-bold">Total Amount:</span>
-                <span className="font-bold text-green-700">₹{total}</span>
+
+                {useCustomAmount && (
+                  <FormField
+                    control={form.control}
+                    name="customAmount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Custom Amount</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder={MIN_RATES[watchPlatform].toString()}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the amount you want to pay per review.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
-            </div>
-            
-            <Button 
-              type="submit" 
-              className="w-full bg-green-600 hover:bg-green-700"
+            </CardContent>
+          </Card>
+
+          <div className="flex items-center space-x-2 mb-2">
+            <label
+              htmlFor="useCustomAmount"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              <Send className="mr-2 h-4 w-4" /> 
-              Order via WhatsApp
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-      <CardFooter className="flex-col space-y-2">
-        <p className="text-sm text-gray-500">50% advance payment required</p>
-        <div className="flex items-center justify-center">
-          <Check className="h-4 w-4 text-green-500 mr-1" />
-          <span className="text-sm text-gray-500">Safe & Secure Transaction</span>
-        </div>
-      </CardFooter>
-    </Card>
+              Set custom amount per review
+            </label>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                {`Minimum ₹${MIN_RATES[watchPlatform]} per review`}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <div className="space-y-1">
+              <div className="text-lg font-semibold">
+                Total: ₹{total}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {unitPrice} x {watchQuantity} reviews
+              </p>
+            </div>
+            <Button type="submit">Place Order</Button>
+          </div>
+        </form>
+      </Form>
+    </TooltipProvider>
   );
 };
 
