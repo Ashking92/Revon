@@ -75,7 +75,7 @@ const LiveOrders = () => {
         ordersData = [
           {
             id: '1',
-            customer_name: 'John Doe',
+            customer_name: 'Prem Sankhe',
             platform: 'iOS App Review',
             quantity: 5,
             amount: '500',
@@ -84,7 +84,7 @@ const LiveOrders = () => {
           },
           {
             id: '2',
-            customer_name: 'Jane Smith',
+            customer_name: 'Ashish more',
             platform: 'Android App Review',
             quantity: 3,
             amount: '300',
@@ -93,7 +93,7 @@ const LiveOrders = () => {
           },
           {
             id: '3',
-            customer_name: 'Bob Johnson',
+            customer_name: 'mansi sonal',
             platform: 'Google Maps Review',
             quantity: 2,
             amount: '250',
