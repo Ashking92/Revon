@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
@@ -11,6 +10,54 @@ type Order = {
   amount: string;
   timestamp: string;
   status: "pending" | "processing" | "completed";
+};
+
+const INDIAN_NAMES = [
+  "Aarav", "Aditi", "Arjun", "Ananya", "Dhruv", "Diya", "Ishaan", "Kavya",
+  "Kabir", "Lakshmi", "Manav", "Neha", "Pranav", "Priya", "Rahul", "Riya",
+  "Rohan", "Saanvi", "Shaan", "Tanvi", "Vihaan", "Zara", "Krishna", "Meera",
+  "Aryan", "Aisha", "Dev", "Isha", "Jay", "Kiara", "Neil", "Nisha", "Om", "Pia",
+  "Raj", "Siya", "Tara", "Ved", "Yash", "Zain"
+];
+
+const SURNAMES = [
+  "Kumar", "Singh", "Sharma", "Patel", "Shah", "Verma", "Gupta", "Joshi",
+  "Malhotra", "Kapoor", "Mehta", "Reddy", "Chauhan", "Yadav", "Tiwari", "Mishra"
+];
+
+const isWithinBusinessHours = () => {
+  const now = new Date();
+  const hours = now.getHours();
+  return hours >= 7 && hours < 19; // 7 AM to 7 PM
+};
+
+const getRandomName = (): string => {
+  const firstName = INDIAN_NAMES[Math.floor(Math.random() * INDIAN_NAMES.length)];
+  const surname = SURNAMES[Math.floor(Math.random() * SURNAMES.length)];
+  return `${firstName} ${surname}`;
+};
+
+const formatTime = (timestamp: string): string => {
+  const orderTime = new Date(timestamp);
+  const now = new Date();
+  
+  const diffInMinutes = Math.floor((now.getTime() - orderTime.getTime()) / (1000 * 60));
+  
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes === 1 ? '' : 's'} ago`;
+  } else if (diffInMinutes < 24 * 60) {
+    const hours = Math.floor(diffInMinutes / 60);
+    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  } else {
+    const days = Math.floor(diffInMinutes / (24 * 60));
+    return `${days} day${days === 1 ? '' : 's'} ago`;
+  }
+};
+
+const statusColors = {
+  pending: "bg-yellow-100 text-yellow-800",
+  processing: "bg-blue-100 text-blue-800",
+  completed: "bg-green-100 text-green-800"
 };
 
 const DEMO_ORDERS: Order[] = [
@@ -61,45 +108,36 @@ const DEMO_ORDERS: Order[] = [
   },
 ];
 
-const formatTime = (timestamp: string): string => {
-  const orderTime = new Date(timestamp);
-  const now = new Date();
-  
-  const diffInMinutes = Math.floor((now.getTime() - orderTime.getTime()) / (1000 * 60));
-  
-  if (diffInMinutes < 60) {
-    return `${diffInMinutes} minute${diffInMinutes === 1 ? '' : 's'} ago`;
-  } else if (diffInMinutes < 24 * 60) {
-    const hours = Math.floor(diffInMinutes / 60);
-    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
-  } else {
-    const days = Math.floor(diffInMinutes / (24 * 60));
-    return `${days} day${days === 1 ? '' : 's'} ago`;
-  }
-};
-
-const statusColors = {
-  pending: "bg-yellow-100 text-yellow-800",
-  processing: "bg-blue-100 text-blue-800",
-  completed: "bg-green-100 text-green-800"
-};
-
 const LiveOrders = () => {
   const [orders, setOrders] = useState<Order[]>(DEMO_ORDERS);
   const [newOrder, setNewOrder] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(isWithinBusinessHours());
   
   useEffect(() => {
-    // Simulate receiving new orders
-    const interval = setInterval(() => {
+    const hourCheckInterval = setInterval(() => {
+      const open = isWithinBusinessHours();
+      setIsOpen(open);
+      
+      if (!open) {
+        setOrders([]); // Clear orders when closed
+        toast({
+          title: "Service Hours Ended",
+          description: "Live orders will resume tomorrow at 7:00 AM",
+        });
+      }
+    }, 60000);
+
+    const orderInterval = setInterval(() => {
+      if (!isWithinBusinessHours()) return;
+
       const random = Math.random();
       if (random > 0.7) {
         const platforms = ["iOS Reviews", "Android Reviews", "Google Maps", "Web Development", "WordPress Development"];
         const statuses: ("pending" | "processing" | "completed")[] = ["pending", "processing", "completed"];
-        const names = ["Alex", "Ravi", "Nina", "Tom", "Isha", "Wei", "Sofía", "Mohammed"];
         
         const newOrder: Order = {
           id: "ORD-" + Math.floor(10000 + Math.random() * 90000),
-          customer: names[Math.floor(Math.random() * names.length)] + " " + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)] + ".",
+          customer: getRandomName(),
           platform: platforms[Math.floor(Math.random() * platforms.length)],
           quantity: Math.floor(Math.random() * 20) + 1,
           amount: "₹" + (Math.floor(Math.random() * 1000) + 100),
@@ -115,16 +153,35 @@ const LiveOrders = () => {
           description: `${newOrder.customer} ordered ${newOrder.quantity} ${newOrder.platform}`,
         });
         
-        // Reset notification after 3 seconds
         setTimeout(() => {
           setNewOrder(false);
         }, 3000);
       }
-    }, 15000); // Every 15 seconds
+    }, 15000);
     
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(orderInterval);
+      clearInterval(hourCheckInterval);
+    };
   }, []);
   
+  if (!isOpen) {
+    return (
+      <Card>
+        <CardHeader className="bg-gradient-to-r from-green-50 to-blue-50 border-b">
+          <CardTitle className="text-xl">Live Orders</CardTitle>
+        </CardHeader>
+        <CardContent className="p-6 text-center">
+          <p className="text-gray-600">
+            Our live order system is currently closed.
+            <br />
+            Operating hours: 7:00 AM - 7:00 PM IST
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader className="bg-gradient-to-r from-green-50 to-blue-50 border-b">
