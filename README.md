@@ -1,46 +1,66 @@
-# 🚀 Revon
+# 🌟 Revon – Review Marketplace & Dashboard
 
-**Revon** is a smart review + analytics dashboard that allows users to **review apps and maps**, track feedback, and earn income through insights — all in **real-time**.
-
----
-
-## 🔥 Key Highlights
-
-- 📝 Review Android/iOS Apps & Maps
-- 📡 Real-Time Order and Review Data
-- 💸 Income Earning Opportunity per Review
-- 📱 Supports Multiple Devices (Android, iOS, Web)
-- 📊 Status Filters: `Pending`, `Processing`, `Completed`
-- ⏰ Auto Switch to Dummy Data in Off Hours
-- ⚙️ Built with React.js + Supabase
+**Revon** is a real-time review marketplace where **clients** can buy high-quality reviews for their **apps and maps**, and **users** (reviewers) can earn income by completing those reviews from multiple devices.
 
 ---
 
-## 💡 What is Revon?
+## 🔥 Key Features
 
-> **Revon** is not just a dashboard — it’s a **review + reward system** where users can:
-> 
-> - Submit reviews on apps and maps
-> - Get data insights in real-time
-> - Earn through performance-based tasks
-> - Manage orders and statuses from multiple devices
+- 🧑‍💼 **Clients** can:
+  - Submit app/map review orders
+  - Get real-time status updates
+  - Track delivery & performance
+
+- 🧑‍💻 **Reviewers** can:
+  - Accept review tasks
+  - Earn income per completed review
+  - View status (`Pending`, `Processing`, `Completed`)
+
+- 📡 **Real-Time Data Display** (via Supabase)
+- 📱 Works on multiple devices (Android, iOS, Web)
+- 🧪 Dummy Data Fallback during inactive hours
+- 💸 Transparent earning system
+
+---
+
+## 💡 How Revon Works
+
+> **Step 1: Clients post review orders**  
+> - App link / Map location  
+> - Review type (text/image/rating)  
+> - Device preference & quantity
+
+> **Step 2: Reviewers accept tasks**  
+> - Perform tasks from listed devices  
+> - Submit proof (auto/manual)  
+> - Earn instant credits
+
+> **Step 3: Real-time dashboard shows progress**  
+> - Track live updates  
+> - Monitor earnings, task status, and more
 
 ---
 
 ## 🛠️ Tech Stack
 
 - **Frontend:** React.js + TypeScript
-- **Backend:** Supabase (Auth, Realtime DB)
+- **Backend:** Supabase (Realtime DB + Auth)
 - **Styling:** Tailwind CSS
-- **Hosting:** Vercel / Firebase / Netlify
+- **Deployment:** Vercel / Firebase Hosting
 
 ---
 
 ## 📸 Screenshots
 
-> _(Add screenshots of order list, status tracking, and earning screen here)_
+_(Add interface images: Task list, Order summary, Status filters, Earnings)_
 
 ---
 
-## 📁 Folder Structure
+## 🧪 Dummy Mode
+
+> In case the app is inactive (e.g. during non-working hours), it auto-switches to dummy mode showing sample data with 20+ real names and devices.
+
+---
+
+## 📁 Folder Overview
 
