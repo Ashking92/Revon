@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 
 const reviews = [
@@ -21,11 +20,20 @@ const getRandomReview = () => {
 // Timer for 5 minutes in milliseconds
 const FIVE_MIN = 5 * 60 * 1000;
 
+// Generate same number daily using date seed
+const getDailyRandom = (min, max) => {
+  const today = new Date().toDateString();
+  const seed = today.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const rng = (seed * 9301 + 49297) % 233280;
+  const rnd = rng / 233280;
+  return Math.floor(min + rnd * (max - min + 1));
+};
+
 const Statistics = () => {
   const [stats, setStats] = useState({
     totalCustomers: 30,
     totalReviews: 1250,
-    todayOrders: 13,
+    LastDayOrders: getDailyRandom(8, 35),
     monthlyOrders: 320
   });
   const [review, setReview] = useState(getRandomReview());
@@ -34,10 +42,10 @@ const Statistics = () => {
     // Update stats & review every 5 minutes
     const updateStats = () => {
       setStats({
-        totalCustomers: 30 + Math.floor(Math.random() * 6), // 30 - 35+
-        totalReviews: 1200 + Math.floor(Math.random() * 60), // 1200 - 1259+
-        todayOrders: 12 + Math.floor(Math.random() * 5),     // 12 - 16
-        monthlyOrders: 300 + Math.floor(Math.random() * 40), // 300 - 339
+        totalCustomers: 30 + Math.floor(Math.random() * 6),
+        totalReviews: 1200 + Math.floor(Math.random() * 60),
+        LastDayOrders: getDailyRandom(8, 35), // stays same for a day
+        monthlyOrders: 300 + Math.floor(Math.random() * 40),
       });
       setReview(getRandomReview());
     };
@@ -61,8 +69,8 @@ const Statistics = () => {
           <p className="text-gray-600 font-medium">Reviews Delivered</p>
         </div>
         <div className="bg-green-50 p-4 rounded-lg">
-          <p className="text-3xl font-bold text-green-700">{stats.todayOrders}</p>
-          <p className="text-gray-600 font-medium">Today's Orders</p>
+          <p className="text-3xl font-bold text-green-700">{stats.LastDayOrders}</p>
+          <p className="text-gray-600 font-medium">Last Day Orders</p>
         </div>
         <div className="bg-green-50 p-4 rounded-lg">
           <p className="text-3xl font-bold text-green-700">{stats.monthlyOrders}</p>
@@ -81,4 +89,3 @@ const Statistics = () => {
 };
 
 export default Statistics;
-
