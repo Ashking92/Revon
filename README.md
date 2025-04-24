@@ -1,6 +1,6 @@
-# 🌟 Revon – Review Marketplace & Dashboard
+# 🌟 Revon™ – Review Marketplace & Dashboard
 
-**Revon** is a real-time review marketplace where **clients** can buy high-quality reviews for their **apps and maps**, and **users** (reviewers) can earn income by completing those reviews from multiple devices.
+**Revon™** is a real-time review marketplace where **clients** can buy high-quality reviews for their **apps and maps**, and **users** (reviewers) can earn income by completing those reviews from multiple devices.
 
 ---
 
@@ -23,7 +23,7 @@
 
 ---
 
-## 💡 How Revon Works
+## 💡 How Revon™ Works
 
 > **Step 1: Clients post review orders**  
 > - App link / Map location  
