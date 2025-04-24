@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -23,18 +24,55 @@ const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
-    // Add Tawk.to widget (Replace YOUR_TAWKTO_PROPERTY_ID as needed)
+    // Prevent text selection and copying
+    document.addEventListener('selectstart', (e) => e.preventDefault());
+    document.addEventListener('copy', (e) => {
+      e.preventDefault();
+      e.clipboardData?.setData('text/plain', 'bidu meri website main se kuch bhi copy karna impossible hain');
+    });
+
+    // Prevent screenshots from showing content
+    const style = document.createElement('style');
+    style.textContent = `
+      html {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      body * {
+        visibility: visible;
+      }
+      body {
+        background: #fff;
+      }
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+      }
+      @media screen and (min-resolution: 2dppx) {
+        body * {
+          visibility: visible !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Add Tawk.to widget
     const tawk = document.createElement("script");
     tawk.async = true;
-    tawk.src = "https://embed.tawk.to/65fe1eb00ff6374032cffe95/1hoadlb52"; // Use your Tawk.to property ID here!
+    tawk.src = "https://embed.tawk.to/65fe1eb00ff6374032cffe95/1hoadlb52";
     tawk.charset = "UTF-8";
     tawk.setAttribute("crossorigin", "*");
     document.body.appendChild(tawk);
 
     return () => {
       document.body.removeChild(tawk);
+      document.head.removeChild(style);
     };
   }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
