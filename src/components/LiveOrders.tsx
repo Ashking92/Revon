@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/lib/toast";
@@ -69,14 +68,16 @@ const LiveOrders = () => {
         return;
       }
 
-      // Convert numeric amount to string for Order type
-      const ordersWithStringAmount = data.map(order => ({
+      const ordersWithValidStatus = data.map(order => ({
         ...order,
-        amount: order.amount.toString()
+        amount: order.amount.toString(),
+        status: (order.status === 'pending' || order.status === 'processing' || order.status === 'completed') 
+          ? order.status as "pending" | "processing" | "completed" 
+          : 'pending'
       }));
 
-      setOrders(ordersWithStringAmount);
-      updateStats(ordersWithStringAmount);
+      setOrders(ordersWithValidStatus);
+      updateStats(ordersWithValidStatus);
     };
 
     const updateStats = (orderData: Order[]) => {
@@ -98,23 +99,27 @@ const LiveOrders = () => {
 
     fetchInitialOrders();
 
-    // Subscribe to real-time updates
     const channel = supabase
       .channel('public:orders')
       .on('postgres_changes', 
         { event: '*', schema: 'public', table: 'orders' },
         payload => {
           if (payload.eventType === 'INSERT') {
+            const status = payload.new.status;
+            const validStatus = (status === 'pending' || status === 'processing' || status === 'completed') 
+              ? status as "pending" | "processing" | "completed"
+              : 'pending';
+              
             const newOrder = {
               ...(payload.new as any),
-              amount: (payload.new as any).amount.toString()
+              amount: (payload.new as any).amount.toString(),
+              status: validStatus
             };
             
             setOrders(prev => [newOrder, ...prev.slice(0, 4)]);
             setNewOrder(true);
             setTimeout(() => setNewOrder(false), 3000);
             
-            // Update stats
             setStats(prev => ({
               ...prev,
               todayOrders: prev.todayOrders + 1,

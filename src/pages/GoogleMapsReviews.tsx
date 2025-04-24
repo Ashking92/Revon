@@ -23,7 +23,7 @@ const GoogleMapsReviews = () => {
           </ul>
         </div>
 
-        <ReviewOrderForm defaultPlatform="google_maps" />
+        <ReviewOrderForm defaultPlatform="google-maps" />
       </div>
       <Footer />
     </div>
