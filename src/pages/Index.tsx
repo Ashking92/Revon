@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import HeroSection from "../components/HeroSection";
@@ -7,7 +6,6 @@ import LiveOrders from "../components/LiveOrders";
 import HowToOrder from "../components/HowToOrder";
 import AboutContact from "../components/AboutContact";
 import Footer from "../components/Footer";
-import WelcomePopup from "../components/WelcomePopup";
 import Navbar from "../components/Navbar";
 import { Button } from "@/components/ui/button";
 
@@ -32,7 +30,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
-      <WelcomePopup />
       <Navbar />
       <div className="max-w-6xl mx-auto px-4">
         {/* --- HERO SECTION: Only brief info --- */}
@@ -41,7 +38,7 @@ const Index = () => {
             Take Your Online Reputation <span className="text-blue-700">to the Next Level</span>
           </h1>
           <p className="text-gray-600 max-w-xl mx-auto">
-            Boost your app or business with authentic, high-quality reviews. Explore our full range of services designed to grow your brand’s trust and visibility!
+            Boost your app or business with authentic, high-quality reviews. Explore our full range of services designed to grow your brand's trust and visibility!
           </p>
         </section>
         {/* --- DYNAMIC: Redirect to other pages for service info --- */}
@@ -155,4 +152,3 @@ const Index = () => {
 };
 
 export default Index;
-

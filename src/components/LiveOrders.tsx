@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/lib/toast";
@@ -67,8 +68,42 @@ const LiveOrders = () => {
         console.error('Error fetching orders:', error);
         return;
       }
+      
+      // Create dummy data if no orders are returned
+      let ordersData = data;
+      if (!data || data.length === 0) {
+        ordersData = [
+          {
+            id: '1',
+            customer_name: 'John Doe',
+            platform: 'iOS App Review',
+            quantity: 5,
+            amount: '500',
+            created_at: new Date().toISOString(),
+            status: 'pending'
+          },
+          {
+            id: '2',
+            customer_name: 'Jane Smith',
+            platform: 'Android App Review',
+            quantity: 3,
+            amount: '300',
+            created_at: new Date(Date.now() - 30 * 60000).toISOString(),
+            status: 'processing'
+          },
+          {
+            id: '3',
+            customer_name: 'Bob Johnson',
+            platform: 'Google Maps Review',
+            quantity: 2,
+            amount: '250',
+            created_at: new Date(Date.now() - 120 * 60000).toISOString(),
+            status: 'completed'
+          }
+        ];
+      }
 
-      const ordersWithValidStatus = data.map(order => ({
+      const ordersWithValidStatus = ordersData.map(order => ({
         ...order,
         amount: order.amount.toString(),
         status: (order.status === 'pending' || order.status === 'processing' || order.status === 'completed') 
