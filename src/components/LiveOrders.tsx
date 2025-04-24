@@ -1,8 +1,8 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/lib/toast";
+import { supabase } from "@/lib/supabase";
 
 type Order = {
   id: string;
@@ -69,8 +69,14 @@ const LiveOrders = () => {
         return;
       }
 
-      setOrders(data);
-      updateStats(data);
+      // Convert numeric amount to string for Order type
+      const ordersWithStringAmount = data.map(order => ({
+        ...order,
+        amount: order.amount.toString()
+      }));
+
+      setOrders(ordersWithStringAmount);
+      updateStats(ordersWithStringAmount);
     };
 
     const updateStats = (orderData: Order[]) => {
@@ -99,7 +105,12 @@ const LiveOrders = () => {
         { event: '*', schema: 'public', table: 'orders' },
         payload => {
           if (payload.eventType === 'INSERT') {
-            setOrders(prev => [payload.new as Order, ...prev.slice(0, 4)]);
+            const newOrder = {
+              ...(payload.new as any),
+              amount: (payload.new as any).amount.toString()
+            };
+            
+            setOrders(prev => [newOrder, ...prev.slice(0, 4)]);
             setNewOrder(true);
             setTimeout(() => setNewOrder(false), 3000);
             
@@ -107,13 +118,13 @@ const LiveOrders = () => {
             setStats(prev => ({
               ...prev,
               todayOrders: prev.todayOrders + 1,
-              todayRevenue: prev.todayRevenue + parseFloat((payload.new as Order).amount),
+              todayRevenue: prev.todayRevenue + parseFloat(newOrder.amount),
               pendingOrders: prev.pendingOrders + 1
             }));
 
             toast({
               title: "New order received!",
-              description: `${(payload.new as Order).customer_name} ordered ${(payload.new as Order).quantity} ${(payload.new as Order).platform}`,
+              description: `${newOrder.customer_name} ordered ${newOrder.quantity} ${newOrder.platform}`,
             });
           }
         }

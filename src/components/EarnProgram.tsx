@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -141,19 +142,19 @@ const EarnProgram = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium">Your Name</label>
-              <Input required placeholder="Enter your full name" />
+              <Input required name="name" placeholder="Enter your full name" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">WhatsApp Number</label>
-              <Input required type="tel" placeholder="Enter WhatsApp number" />
+              <Input required name="whatsappNumber" type="tel" placeholder="Enter WhatsApp number" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Total Emails</label>
-              <Input required type="number" placeholder="Number of emails" />
+              <Input required name="totalEmails" type="number" placeholder="Number of emails" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">UPI/Paytm Number</label>
-              <Input required placeholder="Payment details" />
+              <Input required name="paymentDetails" placeholder="Payment details" />
             </div>
           </div>
 
@@ -161,6 +162,7 @@ const EarnProgram = () => {
             <label className="text-sm font-medium">Email List</label>
             <Textarea 
               required
+              name="emailList"
               placeholder="Enter email IDs (one per line)"
               className="min-h-[200px]"
             />

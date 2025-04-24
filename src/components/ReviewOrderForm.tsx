@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Card, 
@@ -33,6 +34,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "./ui/checkbox";
+import { supabase } from "@/lib/supabase";
+import { toast } from "@/lib/toast";
 
 const MIN_QUANTITY = 1;
 const MAX_QUANTITY = 1000;
@@ -55,7 +58,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const ReviewOrderForm = ({ defaultPlatform = "ios" }) => {
+const ReviewOrderForm = ({ defaultPlatform = "ios" as "ios" | "android" | "google-maps" }) => {
   const [unitPrice, setUnitPrice] = useState<number>(MIN_RATES[defaultPlatform]);
   const [total, setTotal] = useState<number>(0);
   const [useCustomAmount, setUseCustomAmount] = useState(false);
@@ -208,7 +211,7 @@ const ReviewOrderForm = ({ defaultPlatform = "ios" }) => {
                             checked={field.value}
                             onCheckedChange={(checked) => {
                               field.onChange(checked);
-                              setUseCustomAmount(checked);
+                              setUseCustomAmount(checked === true);
                             }}
                           />
                         </FormControl>
