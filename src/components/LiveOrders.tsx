@@ -1,4 +1,4 @@
-// OrderPage.jsx
+// AutoOrders.jsx
 import React, { useEffect, useState } from "react";
 
 const names = [
@@ -17,46 +17,49 @@ const getRandomName = () => names[Math.floor(Math.random() * names.length)];
 
 const getTodayKey = () => {
   const date = new Date().toISOString().split("T")[0];
-  return `orders-${date}`;
+  return `orderCount-${date}`;
 };
 
-const OrderPage = () => {
+const AutoOrders = () => {
   const [name, setName] = useState("");
-  const [orderCount, setOrderCount] = useState(0);
+  const [orders, setOrders] = useState(0);
 
-  // Set or get name from localStorage
+  // Set user name once
   useEffect(() => {
-    let storedName = localStorage.getItem("customerName");
+    let storedName = localStorage.getItem("username");
     if (!storedName) {
       storedName = getRandomName();
-      localStorage.setItem("customerName", storedName);
+      localStorage.setItem("username", storedName);
     }
     setName(storedName);
   }, []);
 
-  // Get today's order count from localStorage
+  // Load today's orders
   useEffect(() => {
     const key = getTodayKey();
-    const count = localStorage.getItem(key);
-    setOrderCount(count ? parseInt(count) : 0);
+    const saved = localStorage.getItem(key);
+    setOrders(saved ? parseInt(saved) : 0);
   }, []);
 
-  const handleOrder = () => {
-    const key = getTodayKey();
-    const newCount = orderCount + 1;
-    localStorage.setItem(key, newCount.toString());
-    setOrderCount(newCount);
-  };
+  // Auto increase orders every 20 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const key = getTodayKey();
+      const newCount = orders + 1;
+      localStorage.setItem(key, newCount.toString());
+      setOrders(newCount);
+    }, 20000); // 20 seconds
+
+    return () => clearInterval(interval);
+  }, [orders]);
 
   return (
-    <div style={{ padding: 20, fontFamily: "sans-serif", textAlign: "center" }}>
-      <h1>👋 Hi, {name}</h1>
-      <h2>📦 Today's Order Count: {orderCount}</h2>
-      <button onClick={handleOrder} style={{ padding: 10, fontSize: 18 }}>
-        ➕ Place Dummy Order
-      </button>
+    <div style={{ padding: 20, textAlign: "center", fontFamily: "sans-serif" }}>
+      <h1>👤 Welcome, {name}</h1>
+      <h2>📦 Today's Orders: {orders}</h2>
+      <p style={{ fontSize: 14, color: "gray" }}>Updating every 20 seconds...</p>
     </div>
   );
 };
 
-export default OrderPage;
+export default AutoOrders;
