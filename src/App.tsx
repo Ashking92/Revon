@@ -17,6 +17,7 @@ import Contact from "./pages/Contact";
 import LiveOrders from "./pages/LiveOrders";
 import ServicesPage from "./pages/ServicesPage";
 import Earn from "./pages/Earn";
+import About from "./pages/About";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ const App = () => {
             <Route path="/live-orders" element={<LiveOrders />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/earn" element={<Earn />} />
+            <Route path="/about" element={<About />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

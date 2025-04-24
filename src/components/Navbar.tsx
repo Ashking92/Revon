@@ -66,6 +66,9 @@ const Navbar = () => {
                   <Link to="/earn" className="px-4 py-2 rounded hover:bg-blue-50" onClick={() => setMobileMenuOpen(false)}>
                     Earn
                   </Link>
+                  <Link to="/about" className="px-4 py-2 rounded hover:bg-blue-50" onClick={() => setMobileMenuOpen(false)}>
+                    About
+                  </Link>
                 </div>
               </div>
             )}
@@ -163,6 +166,14 @@ const Navbar = () => {
                 <Link to="/earn">
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     Earn
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              
+              <NavigationMenuItem>
+                <Link to="/about">
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    About
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>

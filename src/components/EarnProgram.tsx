@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -159,31 +158,31 @@ const EarnProgram = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Email List</label>
+            <label className="text-sm font-medium">Email List with Passwords (One per line)</label>
+            <p className="text-sm text-gray-500 mb-2">Format: email:password (example: user@gmail.com:password123)</p>
             <Textarea 
               required
               name="emailList"
-              placeholder="Enter email IDs (one per line)"
-              className="min-h-[200px]"
+              placeholder="Enter email:password (one per line)"
+              className="min-h-[200px] font-mono"
             />
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Upload File (Optional)</label>
             <Input type="file" accept=".txt,.csv,.xlsx" />
+            <p className="text-xs text-gray-500">Supported formats: TXT, CSV, Excel</p>
           </div>
 
           <div className="flex items-center space-x-2">
             <Checkbox required id="fresh" />
             <label htmlFor="fresh" className="text-sm font-medium">
-              I confirm all emails are fresh and working
+              I confirm all emails are fresh, working, and I have permission to use them
             </label>
           </div>
 
           <div className="text-center space-y-4">
-            <p className="text-sm text-gray-500">
-              Review goes live within 6-12 hours
-            </p>
+            <p className="text-sm text-gray-500">Review goes live within 6-12 hours</p>
             <Button type="submit" className="w-full md:w-auto bg-red-600 hover:bg-red-700">
               Submit for Review
             </Button>
