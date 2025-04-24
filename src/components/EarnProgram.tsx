@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,18 +6,47 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Check, ShieldCheck, CalendarCheck, Ban } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { supabase } from "@/lib/supabase";
+import { toast } from "@/lib/toast";
 
 const EarnProgram = () => {
   const [submitted, setSubmitted] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    // Scroll to thank you message
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 100);
+    const formData = new FormData(e.target as HTMLFormElement);
+    
+    try {
+      const emailList = formData.get('emailList')?.toString().split('\n').filter(email => email.trim());
+      
+      const { error } = await supabase.from('earn_submissions').insert({
+        name: formData.get('name')?.toString(),
+        whatsapp_number: formData.get('whatsappNumber')?.toString(),
+        total_emails: parseInt(formData.get('totalEmails')?.toString() || '0'),
+        email_list: emailList,
+        payment_details: formData.get('paymentDetails')?.toString(),
+      });
+
+      if (error) throw error;
+
+      setSubmitted(true);
+      toast({
+        title: "Submission successful!",
+        description: "We'll review your submission and process the payment within 24 hours.",
+      });
+
+      // Scroll to thank you message
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    } catch (error) {
+      toast({
+        title: "Error submitting form",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
   };
 
   const scrollToForm = () => {

@@ -1,40 +1,23 @@
+
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 type Order = {
   id: string;
-  customer: string;
+  customer_name: string;
   platform: string;
   quantity: number;
   amount: string;
-  timestamp: string;
+  created_at: string;
   status: "pending" | "processing" | "completed";
 };
-
-const INDIAN_NAMES = [
-  "Aarav", "Aditi", "Arjun", "Ananya", "Dhruv", "Diya", "Ishaan", "Kavya",
-  "Kabir", "Lakshmi", "Manav", "Neha", "Pranav", "Priya", "Rahul", "Riya",
-  "Rohan", "Saanvi", "Shaan", "Tanvi", "Vihaan", "Zara", "Krishna", "Meera",
-  "Aryan", "Aisha", "Dev", "Isha", "Jay", "Kiara", "Neil", "Nisha", "Om", "Pia",
-  "Raj", "Siya", "Tara", "Ved", "Yash", "Zain"
-];
-
-const SURNAMES = [
-  "Kumar", "Singh", "Sharma", "Patel", "Shah", "Verma", "Gupta", "Joshi",
-  "Malhotra", "Kapoor", "Mehta", "Reddy", "Chauhan", "Yadav", "Tiwari", "Mishra"
-];
 
 const isWithinBusinessHours = () => {
   const now = new Date();
   const hours = now.getHours();
   return hours >= 7 && hours < 19; // 7 AM to 7 PM
-};
-
-const getRandomName = (): string => {
-  const firstName = INDIAN_NAMES[Math.floor(Math.random() * INDIAN_NAMES.length)];
-  const surname = SURNAMES[Math.floor(Math.random() * SURNAMES.length)];
-  return `${firstName} ${surname}`;
 };
 
 const formatTime = (timestamp: string): string => {
@@ -60,66 +43,89 @@ const statusColors = {
   completed: "bg-green-100 text-green-800"
 };
 
-const DEMO_ORDERS: Order[] = [
-  {
-    id: "ORD-" + Math.floor(10000 + Math.random() * 90000),
-    customer: "John D.",
-    platform: "iOS Reviews",
-    quantity: 10,
-    amount: "₹500",
-    timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString(), // 5 minutes ago
-    status: "processing"
-  },
-  {
-    id: "ORD-" + Math.floor(10000 + Math.random() * 90000),
-    customer: "Priya S.",
-    platform: "Android Reviews",
-    quantity: 20,
-    amount: "₹500",
-    timestamp: new Date(Date.now() - 1000 * 60 * 28).toISOString(), // 28 minutes ago
-    status: "pending"
-  },
-  {
-    id: "ORD-" + Math.floor(10000 + Math.random() * 90000),
-    customer: "Mike R.",
-    platform: "Google Maps",
-    quantity: 5,
-    amount: "₹300",
-    timestamp: new Date(Date.now() - 1000 * 60 * 67).toISOString(), // 67 minutes ago
-    status: "completed"
-  },
-  {
-    id: "ORD-" + Math.floor(10000 + Math.random() * 90000),
-    customer: "Amit P.",
-    platform: "Web Development",
-    quantity: 1,
-    amount: "₹6,000",
-    timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString(), // 120 minutes ago
-    status: "processing"
-  },
-  {
-    id: "ORD-" + Math.floor(10000 + Math.random() * 90000),
-    customer: "Sarah L.",
-    platform: "Android Reviews",
-    quantity: 15,
-    amount: "₹375",
-    timestamp: new Date(Date.now() - 1000 * 60 * 180).toISOString(), // 3 hours ago
-    status: "completed"
-  },
-];
-
 const LiveOrders = () => {
-  const [orders, setOrders] = useState<Order[]>(DEMO_ORDERS);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [newOrder, setNewOrder] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(isWithinBusinessHours());
+  const [stats, setStats] = useState({
+    todayOrders: 0,
+    completionRate: 0,
+    todayRevenue: 0,
+    pendingOrders: 0
+  });
   
   useEffect(() => {
+    const fetchInitialOrders = async () => {
+      if (!isWithinBusinessHours()) return;
+
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      if (error) {
+        console.error('Error fetching orders:', error);
+        return;
+      }
+
+      setOrders(data);
+      updateStats(data);
+    };
+
+    const updateStats = (orderData: Order[]) => {
+      const today = new Date().toISOString().split('T')[0];
+      const todayOrders = orderData.filter(order => 
+        order.created_at.startsWith(today)
+      );
+
+      const completed = orderData.filter(order => order.status === 'completed').length;
+      const total = orderData.length || 1;
+
+      setStats({
+        todayOrders: todayOrders.length,
+        completionRate: Math.round((completed / total) * 100),
+        todayRevenue: todayOrders.reduce((sum, order) => sum + parseFloat(order.amount), 0),
+        pendingOrders: orderData.filter(order => order.status === 'pending').length
+      });
+    };
+
+    fetchInitialOrders();
+
+    // Subscribe to real-time updates
+    const channel = supabase
+      .channel('public:orders')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'orders' },
+        payload => {
+          if (payload.eventType === 'INSERT') {
+            setOrders(prev => [payload.new as Order, ...prev.slice(0, 4)]);
+            setNewOrder(true);
+            setTimeout(() => setNewOrder(false), 3000);
+            
+            // Update stats
+            setStats(prev => ({
+              ...prev,
+              todayOrders: prev.todayOrders + 1,
+              todayRevenue: prev.todayRevenue + parseFloat((payload.new as Order).amount),
+              pendingOrders: prev.pendingOrders + 1
+            }));
+
+            toast({
+              title: "New order received!",
+              description: `${(payload.new as Order).customer_name} ordered ${(payload.new as Order).quantity} ${(payload.new as Order).platform}`,
+            });
+          }
+        }
+      )
+      .subscribe();
+
     const hourCheckInterval = setInterval(() => {
       const open = isWithinBusinessHours();
       setIsOpen(open);
       
       if (!open) {
-        setOrders([]); // Clear orders when closed
+        setOrders([]);
         toast({
           title: "Service Hours Ended",
           description: "Live orders will resume tomorrow at 7:00 AM",
@@ -127,44 +133,12 @@ const LiveOrders = () => {
       }
     }, 60000);
 
-    const orderInterval = setInterval(() => {
-      if (!isWithinBusinessHours()) return;
-
-      const random = Math.random();
-      if (random > 0.7) {
-        const platforms = ["iOS Reviews", "Android Reviews", "Google Maps", "Web Development", "WordPress Development"];
-        const statuses: ("pending" | "processing" | "completed")[] = ["pending", "processing", "completed"];
-        
-        const newOrder: Order = {
-          id: "ORD-" + Math.floor(10000 + Math.random() * 90000),
-          customer: getRandomName(),
-          platform: platforms[Math.floor(Math.random() * platforms.length)],
-          quantity: Math.floor(Math.random() * 20) + 1,
-          amount: "₹" + (Math.floor(Math.random() * 1000) + 100),
-          timestamp: new Date().toISOString(),
-          status: statuses[Math.floor(Math.random() * statuses.length)]
-        };
-        
-        setOrders(prevOrders => [newOrder, ...prevOrders.slice(0, 4)]);
-        setNewOrder(true);
-        
-        toast({
-          title: "New order received!",
-          description: `${newOrder.customer} ordered ${newOrder.quantity} ${newOrder.platform}`,
-        });
-        
-        setTimeout(() => {
-          setNewOrder(false);
-        }, 3000);
-      }
-    }, 15000);
-    
     return () => {
-      clearInterval(orderInterval);
+      supabase.removeChannel(channel);
       clearInterval(hourCheckInterval);
     };
   }, []);
-  
+
   if (!isOpen) {
     return (
       <Card>
@@ -195,20 +169,38 @@ const LiveOrders = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+          <div className="bg-blue-50 p-4 rounded-lg text-center">
+            <p className="text-2xl font-bold text-blue-700">{stats.todayOrders}</p>
+            <p className="text-gray-600 font-medium">Today's Orders</p>
+          </div>
+          <div className="bg-green-50 p-4 rounded-lg text-center">
+            <p className="text-2xl font-bold text-green-700">{stats.completionRate}%</p>
+            <p className="text-gray-600 font-medium">Completion Rate</p>
+          </div>
+          <div className="bg-amber-50 p-4 rounded-lg text-center">
+            <p className="text-2xl font-bold text-amber-700">₹{stats.todayRevenue.toLocaleString()}</p>
+            <p className="text-gray-600 font-medium">Today's Revenue</p>
+          </div>
+          <div className="bg-purple-50 p-4 rounded-lg text-center">
+            <p className="text-2xl font-bold text-purple-700">{stats.pendingOrders}</p>
+            <p className="text-gray-600 font-medium">Pending Orders</p>
+          </div>
+        </div>
         <div className="divide-y divide-gray-100 max-h-[400px] overflow-y-auto">
           {orders.map((order) => (
             <div key={order.id} className="p-4 hover:bg-gray-50 transition-colors">
               <div className="flex justify-between">
                 <div>
-                  <p className="font-medium text-sm">{order.customer}</p>
+                  <p className="font-medium text-sm">{order.customer_name}</p>
                   <div className="flex items-center space-x-2 mt-1">
                     <span className="text-xs text-gray-500">{order.id}</span>
                     <span className="h-1 w-1 rounded-full bg-gray-300"></span>
-                    <span className="text-xs">{formatTime(order.timestamp)}</span>
+                    <span className="text-xs">{formatTime(order.created_at)}</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-green-700">{order.amount}</p>
+                  <p className="font-bold text-green-700">₹{order.amount}</p>
                   <span className={`text-xs px-2 py-0.5 rounded-full ${statusColors[order.status]}`}>
                     {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                   </span>

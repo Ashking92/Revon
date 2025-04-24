@@ -36,7 +36,7 @@ import { Checkbox } from "./ui/checkbox";
 
 const MIN_QUANTITY = 1;
 const MAX_QUANTITY = 1000;
-const MIN_RATES = {
+const MIN_RATES: Record<string, number> = {
   ios: 25,
   android: 15,
   "google-maps": 20,
@@ -44,21 +44,23 @@ const MIN_RATES = {
 
 const formSchema = z.object({
   platform: z.enum(["ios", "android", "google-maps"]),
-  quantity: z.number().min(MIN_QUANTITY).max(MAX_QUANTITY),
+  quantity: z.coerce.number().min(MIN_QUANTITY).max(MAX_QUANTITY),
   reviewText: z.string().min(10, {
     message: "Review text must be at least 10 characters.",
   }),
   useCustomAmount: z.boolean().default(false),
-  customAmount: z.number().optional(),
+  customAmount: z.coerce.number().optional(),
   appLink: z.string().url({ message: "Please enter a valid URL" }),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 const ReviewOrderForm = ({ defaultPlatform = "ios" }) => {
-  const [unitPrice, setUnitPrice] = useState(MIN_RATES[defaultPlatform]);
-  const [total, setTotal] = useState(0);
+  const [unitPrice, setUnitPrice] = useState<number>(MIN_RATES[defaultPlatform]);
+  const [total, setTotal] = useState<number>(0);
   const [useCustomAmount, setUseCustomAmount] = useState(false);
 
-  const form = useForm({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       platform: defaultPlatform,
@@ -80,12 +82,32 @@ const ReviewOrderForm = ({ defaultPlatform = "ios" }) => {
       price = Math.max(MIN_RATES[watchPlatform], watchCustomAmount);
     }
     setUnitPrice(price);
-    setTotal(price * watchQuantity);
-  }, [useCustomAmount, watchCustomAmount, watchPlatform, watchQuantity, setUnitPrice, setTotal]);
+    setTotal(price * (watchQuantity || 0));
+  }, [useCustomAmount, watchCustomAmount, watchPlatform, watchQuantity]);
   
-  const handleSubmit = (data) => {
-    alert("submit");
-    console.log(data);
+  const handleSubmit = async (data: FormValues) => {
+    try {
+      const { error } = await supabase.from('orders').insert({
+        customer_name: "Anonymous Customer",
+        platform: data.platform,
+        quantity: data.quantity,
+        amount: data.useCustomAmount && data.customAmount ? data.customAmount * data.quantity : unitPrice * data.quantity,
+        status: 'pending'
+      });
+
+      if (error) throw error;
+      
+      toast({
+        title: "Order submitted successfully!",
+        description: "We'll process your order soon.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error submitting order",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
