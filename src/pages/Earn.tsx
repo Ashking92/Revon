@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -10,7 +11,7 @@ const Earn = () => {
 
   useEffect(() => {
     const updateRates = () => {
-      const variation = Math.floor(Math.random() * 7) - 3;
+      const variation = Math.floor(Math.random() * 7) - 3; // Random variation between -3 and +3
       
       let newSuccessRate = successRate + variation;
       if (newSuccessRate < 85) newSuccessRate = 85;
@@ -22,7 +23,7 @@ const Earn = () => {
       setFailRate(newFailRate);
     };
     
-    const interval = setInterval(updateRates, 3000);
+    const interval = setInterval(updateRates, 3000); // Update every 3 seconds
     
     return () => clearInterval(interval);
   }, [successRate, failRate]);

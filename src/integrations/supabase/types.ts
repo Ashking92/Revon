@@ -47,7 +47,9 @@ export type Database = {
           amount: number
           created_at: string
           customer_name: string
+          email: string
           id: string
+          phone_number: string
           platform: string
           quantity: number
           status: string
@@ -56,16 +58,20 @@ export type Database = {
           amount: number
           created_at?: string
           customer_name: string
+          email?: string
           id?: string
+          phone_number?: string
           platform: string
           quantity: number
-          status: string
+          status?: string
         }
         Update: {
           amount?: number
           created_at?: string
           customer_name?: string
+          email?: string
           id?: string
+          phone_number?: string
           platform?: string
           quantity?: number
           status?: string
