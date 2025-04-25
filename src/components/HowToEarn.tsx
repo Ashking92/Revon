@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const HowToEarn = () => {
   return (
@@ -31,21 +32,26 @@ const HowToEarn = () => {
         </Card>
 
         <Card className="p-6">
-          <h3 className="text-xl font-semibold mb-4">Payment Structure</h3>
+          <h3 className="text-xl font-semibold mb-4">Job Opportunity</h3>
           <ul className="space-y-3">
             <li className="flex items-start">
               <Check className="h-5 w-5 text-green-500 mt-1 mr-2" />
-              <span>1-39 emails: ₹1 per email</span>
+              <span>Create 50 email IDs within 3 days to qualify for a job</span>
             </li>
             <li className="flex items-start">
               <Check className="h-5 w-5 text-green-500 mt-1 mr-2" />
-              <span>40-49 emails: ₹2 per email</span>
+              <span>Even if you create only 10-20 emails, you'll still get paid for those</span>
             </li>
             <li className="flex items-start">
               <Check className="h-5 w-5 text-green-500 mt-1 mr-2" />
-              <span>50+ emails: ₹500 per day (permanent opportunity)</span>
+              <span>For job inquiries, contact our admin directly</span>
             </li>
           </ul>
+          <div className="mt-4">
+            <Button onClick={() => window.location.href = "https://wa.me/7385066631"} className="w-full bg-green-600 hover:bg-green-700">
+              Contact Admin for Job
+            </Button>
+          </div>
         </Card>
       </div>
 

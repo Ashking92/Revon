@@ -54,6 +54,15 @@ const formSchema = z.object({
   useCustomAmount: z.boolean().default(false),
   customAmount: z.coerce.number().optional(),
   appLink: z.string().url({ message: "Please enter a valid URL" }),
+  customerName: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  phoneNumber: z.string().min(10, {
+    message: "Please enter a valid phone number.",
+  }),
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -72,6 +81,9 @@ const ReviewOrderForm = ({ defaultPlatform = "ios" as "ios" | "android" | "googl
       useCustomAmount: false,
       customAmount: MIN_RATES[defaultPlatform],
       appLink: "",
+      customerName: "",
+      phoneNumber: "",
+      email: "",
     },
   });
 
@@ -91,7 +103,9 @@ const ReviewOrderForm = ({ defaultPlatform = "ios" as "ios" | "android" | "googl
   const handleSubmit = async (data: FormValues) => {
     try {
       const { error } = await supabase.from('orders').insert({
-        customer_name: "Anonymous Customer",
+        customer_name: data.customerName,
+        phone_number: data.phoneNumber,
+        email: data.email,
         platform: data.platform,
         quantity: data.quantity,
         amount: data.useCustomAmount && data.customAmount ? data.customAmount * data.quantity : unitPrice * data.quantity,
@@ -104,6 +118,8 @@ const ReviewOrderForm = ({ defaultPlatform = "ios" as "ios" | "android" | "googl
         title: "Order submitted successfully!",
         description: "We'll process your order soon.",
       });
+      
+      form.reset();
     } catch (error) {
       toast({
         title: "Error submitting order",
@@ -118,7 +134,51 @@ const ReviewOrderForm = ({ defaultPlatform = "ios" as "ios" | "android" | "googl
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           <Card>
-            <CardContent className="grid gap-6">
+            <CardContent className="pt-6 grid gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="customerName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Your Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Full Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Phone Number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Email" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
