@@ -1,10 +1,14 @@
-
 import React from 'react';
 import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const HowToEarn = () => {
+  const handleJobContact = () => {
+    const message = encodeURIComponent("Sir, mujhe job chahiye");
+    window.location.href = `https://wa.me/7385066631?text=${message}`;
+  };
+
   return (
     <div className="space-y-8">
       <div className="text-center">
@@ -48,7 +52,10 @@ const HowToEarn = () => {
             </li>
           </ul>
           <div className="mt-4">
-            <Button onClick={() => window.location.href = "https://wa.me/7385066631"} className="w-full bg-green-600 hover:bg-green-700">
+            <Button 
+              onClick={handleJobContact} 
+              className="w-full bg-green-600 hover:bg-green-700"
+            >
               Contact Admin for Job
             </Button>
           </div>

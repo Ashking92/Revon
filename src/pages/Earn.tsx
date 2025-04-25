@@ -6,16 +6,16 @@ import EarnProgram from "../components/EarnProgram";
 import HowToEarn from "../components/HowToEarn";
 
 const Earn = () => {
-  const [successRate, setSuccessRate] = useState(90);
-  const [failRate, setFailRate] = useState(10);
+  const [successRate, setSuccessRate] = useState(10);
+  const [failRate, setFailRate] = useState(90);
 
   useEffect(() => {
     const updateRates = () => {
-      const variation = Math.floor(Math.random() * 7) - 3; // Random variation between -3 and +3
+      const variation = Math.floor(Math.random() * 5) - 2; // Random variation between -2 and +2
       
       let newSuccessRate = successRate + variation;
-      if (newSuccessRate < 85) newSuccessRate = 85;
-      if (newSuccessRate > 95) newSuccessRate = 95;
+      if (newSuccessRate < 8) newSuccessRate = 8;
+      if (newSuccessRate > 12) newSuccessRate = 12;
       
       const newFailRate = 100 - newSuccessRate;
       
