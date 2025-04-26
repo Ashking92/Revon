@@ -7,6 +7,8 @@ import HowToOrder from "../components/HowToOrder";
 import AboutContact from "../components/AboutContact";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import Testimonials from "../components/Testimonials";
+import FeaturedApps from "../components/FeaturedApps";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
@@ -40,7 +42,19 @@ const Index = () => {
           <p className="text-gray-600 max-w-xl mx-auto">
             Boost your app or business with authentic, high-quality reviews. Explore our full range of services designed to grow your brand's trust and visibility!
           </p>
+          
+          <div className="mt-8">
+            <Link to="/app-review">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg px-8 py-6">
+                Get Your App Reviewed
+              </Button>
+            </Link>
+          </div>
         </section>
+        
+        {/* Featured Apps Section */}
+        <FeaturedApps />
+        
         {/* --- DYNAMIC: Redirect to other pages for service info --- */}
         <section className="my-12">
           <div className="text-center mb-8">
@@ -131,6 +145,10 @@ const Index = () => {
             </Link>
           </div>
         </section>
+        
+        {/* Testimonials Section */}
+        <Testimonials />
+        
         {/* HowToOrder and Live orders Section */}
         <div className="my-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

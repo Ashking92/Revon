@@ -19,6 +19,9 @@ import LiveOrders from "./pages/LiveOrders";
 import ServicesPage from "./pages/ServicesPage";
 import Earn from "./pages/Earn";
 import About from "./pages/About";
+import AppReview from "./pages/AppReview";
+import Reviews from "./pages/Reviews";
+import ReviewDetail from "./pages/ReviewDetail";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +96,9 @@ const App = () => {
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/earn" element={<Earn />} />
             <Route path="/about" element={<About />} />
+            <Route path="/app-review" element={<AppReview />} />
+            <Route path="/reviews" element={<Reviews />} />
+            <Route path="/reviews/:appId" element={<ReviewDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
