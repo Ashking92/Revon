@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from "../components/Navbar";
@@ -6,7 +5,7 @@ import Footer from "../components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
-  FilePdf, 
+  FileText, 
   Share2, 
   Mail, 
   Download, 
@@ -182,7 +181,7 @@ const ReviewDetail = () => {
               
               <div className="bg-gray-50 p-4 rounded-lg mb-4 flex flex-col md:flex-row items-center">
                 <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
-                  <FilePdf className="h-16 w-16 text-red-600" />
+                  <FileText className="h-16 w-16 text-red-600" />
                 </div>
                 <div className="flex-grow">
                   <h4 className="font-medium">{reviewData.appName} - Complete Review Report.pdf</h4>
